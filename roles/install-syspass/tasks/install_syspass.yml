@@ -1,0 +1,56 @@
+---
+# Baixar versão mais recente do sysPass do repositório no github.
+# git clone https://github.com/nuxsmin/sysPass.git
+- name: Clonando a versão mais recente do sysPass do repositório no Github
+  git:
+    repo: https://github.com/nuxsmin/sysPass.git
+    dest: /tmp/syspass
+    # Clonar um repositório com diretório git separado.
+    #separate_git_dir: /tmp/syspass.git
+  tags: sys
+
+- name: Movendo o diretório 'syspass' para raiz do Apache (/var/www/html)
+  shell: mv /tmp/syspass /var/www/html
+  tags: sys
+
+- name: Definindo a propriedade de dono e group recursivamente para o diretório 'syspass'
+  #shell: chown -R www-data:www-data /var/www/html/syspass
+  file:
+    path: /var/www/html/syspass/
+    owner: www-data
+    group: www-data
+    recurse: yes
+  tags: sys
+
+- name: Definindo permissões para outros diretórios (config,backup)
+  file:
+    dest: "{{ item }}"
+    mode: '0750'
+    state: directory
+  loop:
+    - /var/www/html/syspass/app/config
+    - /var/www/html/syspass/app/backup
+  tags: sys
+
+# Composer ------
+- name: Baixando o Composer
+  script: scripts/install_composer.sh
+  tags: sys
+
+- name: Movendo o Composer Globalmente
+  become: true
+  command: mv composer.phar /usr/local/bin/composer
+  tags: sys
+
+- name: Setando permissões no Composer
+  become: true
+  file:
+    path: /usr/local/bin/composer
+    mode: "a+x"
+  tags: sys
+
+# fonte: https://www.garybell.co.uk/upgrading-to-composer-2-using-ansible/
+- name: Instalando/atualizando requerimentos do 'composer.json'
+  command: composer install --no-dev --no-interaction -d /var/www/html/syspass
+  when: true
+  tags: sys

@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+ServerAdmin admin@example.com
+DocumentRoot "/var/www/html/syspass"
+ServerName syspass.example.com
+<Directory "/var/www/html/syspass/">
+Options MultiViews FollowSymlinks
+AllowOverride All
+Order allow,deny
+Allow from all
+</Directory>
+TransferLog /var/log/apache2/syspass_access.log
+ErrorLog /var/log/apache2/syspass_error.log
+</VirtualHost>

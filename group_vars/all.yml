@@ -1,0 +1,6 @@
+---
+#--- group variables file main [webservers / webservers:vars]
+public_ip : x.xxx.xx.xxx
+ansible_user : admin
+ansible_password : 123syspass
+ansible_become_password : 123syspass

@@ -1,0 +1,58 @@
+---
+- name: Adicionando o nome do Server no /etc/hosts
+  shell: echo "127.0.0.1 tf-syspass-server" >> /etc/hosts
+  tags: web
+
+- name: Modificando o arquivo de configuração modt (Message Of The Day)
+  copy:
+    src: file/motd_syspass
+    dest: /etc/motd_syspass
+    owner: root
+    group: root
+    mode: '0644'
+  tags: web
+
+- name: Inserindo configuração no '/etc/profile' para o motd
+  shell: "{{ item }}"
+  no_log: True
+  loop: "{{ profile }}"
+  tags: web1
+
+- name: Executando o 'apt-get update'
+  apt:
+    update_cache: yes
+  tags: web
+
+- name: Instalando os servidor web Apache, banco de dados MariaDB e o PHP
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pkgs }}"
+  tags: web
+
+- name: Editando alguns parâmetros no arquivo de configuração 'php.ini'
+  replace:
+    path: /etc/php/7.4/apache2/php.ini
+    regexp: '{{ item.from }}'
+    replace: '{{ item.to }}'
+  with_items:
+    - { from: 'post_max_size = 8M', to: 'post_max_size = 100M'}
+    - { from: 'upload_max_filesize = 2M', to: 'upload_max_filesize = 100M'}
+    - { from: 'max_execution_time = 30', to: 'max_execution_time = 7200' }
+    - { from: 'memory_limit = 128M', to: 'memory_limit = 512M' }
+    - { from: ';date.timezone =', to: 'date.timezone = America/Sao_Paulo' }
+  tags: web
+
+- name: Reiniciando o serviço Apache
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+  with_items:
+    - 'apache2'
+  tags: web
+
+- name: Habiltando módulos SSl e Rewrite
+  shell: a2enmod ssl rewrite
+  tags: web

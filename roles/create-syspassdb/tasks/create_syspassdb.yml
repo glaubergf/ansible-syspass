@@ -1,0 +1,88 @@
+---
+# Verificar se o banco de dados MariaDB esta em execução e habilitar no boot
+- name: Iniciando e habilitando o serviço MariaDB
+  service:
+    name: mariadb
+    state: started
+    enabled: true
+  tags: sdb
+
+# A instalação do MariaDB não é segura, portanto, é necessário protegê-lo primeiro.
+# Para protegê-lo usa-se o comando: "sudo mysql_secure_installation"
+- name: Conectando ao servidor usando 'login_unix_socket'
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+  ignore_errors: true
+  tags: sdb
+
+- name: Removendo contas de usuários 'anônimos' para localhost
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  tags: sdb
+
+- name: Removendo o MySQL 'test database'
+  mysql_db:
+    name: 'test'
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  tags: sdb
+
+- name: Privilégios de liberação para usuário 'root'
+  shell: mysql -u root -p"{{ mysql_root_password }}" -e 'FLUSH PRIVILEGES'
+  tags: sdb
+
+- name: Criando banco de dados com nome 'syspassdb'
+  mysql_db:
+    name: "syspassdb"
+    login_host: localhost
+    login_user: "root"
+    login_password: "{{ mysql_root_password }}"
+    encoding: utf8mb4 #utf8
+    collation: utf8mb4_bin #utf8_bin
+    state: present
+  tags: sdb
+
+- name: Criando usuário 'syspassuser' para o banco de dados 'syspassdb'
+  mysql_user:
+    name: syspassuser
+    password: "{{ mysql_user_password }}"
+    priv: "*.*:ALL,GRANT"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    state: present
+  tags: sdb
+
+## Nota ##
+##
+## :: Listar o schema:
+#mariadb -u root -p
+#> use syspassdb;
+#> show tables;
+#> select name from User;
+#> select login from User;
+#> select now();
+#> quit;
+##
+## ------
+##
+## :: Exportar - fazer backup (dump) do banco de dados:
+#> mysqldump -u <user> -p <database> > </path/dump_file.sql>
+#> mysqldump -u root -p syspassdb > syspassdb-dump.sql
+##
+## :: Importar - restaurar o backup:
+#> mariadb -u root -p sypassdb < syspass-dump.sql
+##
+## ------
+##
+## :: Mostrar os dados conforme uma planilha com linhas e colunas com o 'explain'
+#> select login, pass from Account;
+#> explain Account;
+##
+## ------

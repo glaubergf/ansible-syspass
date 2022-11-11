@@ -1,0 +1,4 @@
+---
+# vars file for roles/create-syspassdb
+mysql_root_password: root123
+mysql_user_password: syspass123

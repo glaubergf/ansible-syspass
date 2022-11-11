@@ -1,0 +1,10 @@
+---
+- hosts: webservers
+  become: yes
+  #become_user: admin
+  
+  roles:
+  - { role: install-webserver, tags: web }
+  - { role: create-syspassdb, tags: sdb }
+  - { role: install-syspass, tags: sys }
+  - { role: config-host-virtual, tag: vhost }

@@ -1,0 +1,48 @@
+---
+# vars file for roles/install-webserver
+pkgs:
+  - apache2
+  - mariadb-server
+  - python3-pymysql
+  - libapache2-mod-php
+  - php
+  - php-mysqli
+  - php-pdo
+  - php-pear
+  - php-cgi
+  - php-cli
+  - php-common
+  - php-gd
+  - php-json
+  - php-readline
+  - php-curl
+  - php-intl
+  - php-ldap
+  - php-xml
+  - php-mbstring
+  - git
+  - zip
+  - unzip
+  - htop
+  - dnsutils
+
+profile:
+### Insert end in the file /etc/profile:
+# As cores básicas para "(tput setaf 'x')" são as numeradas abaixo:
+# 1-vermelho; 2-verde; 3-amarelo; 4-azul; 5-magenta; 6-ciano; 7-branco
+  - echo '' >> /etc/profile
+  - echo '## start motd - config to motd' >> /etc/profile
+  - echo 'export TERM=xterm-256color' >> /etc/profile
+  - echo '(tput setaf 1)' >> /etc/profile
+  - echo 'cat /etc/motd_syspass' >> /etc/profile
+  - echo '(tput setaf 1)' >> /etc/profile
+  - echo 'echo ''' >> /etc/profile
+  - echo 'echo '🅾🅿🅴🆁🅰🆃🅸🅽🅶 🆂🆈🆂🆃🅴🅼 :'' '`uname -s`' >> /etc/profile
+  - echo 'echo '🅷🅾🆂🆃🅽🅰🅼🅴 :'' '`hostname -s`' >> /etc/profile
+  - echo 'echo '🅳🅰🆃🅴 :'' '`date`' >> /etc/profile
+  - echo 'echo '🆄🅿🆃🅸🅼🅴 :'' '`uptime -p`' >> /etc/profile
+  - echo 'echo '🅿🆄🅱🅻🅸🅲 🅸🅿 :'' '`dig +short myip.opendns.com @resolver1.opendns.com`' >> /etc/profile
+  - echo 'echo '🅷🅾🅼🅴 :'' 'https://syspass.org/en/' >> /etc/profile
+  - echo 'echo '🅳🅾🅲🆂 :'' 'https://syspass-doc.readthedocs.io/' >> /etc/profile
+  - echo 'echo ''' >> /etc/profile
+  - echo '## end motd' >> /etc/profile

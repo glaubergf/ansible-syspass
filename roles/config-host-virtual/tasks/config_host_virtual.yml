@@ -1,0 +1,23 @@
+---
+# Criar um arquivo de configuração de host virtual Apache para hospedar o sysPass na Internet.
+# Executar o comando: nano /etc/apache2/sites-available/syspass.conf
+- name: Criando configuração Host Virtual Apache para o sysPass
+  copy:
+    src: file/syspass.conf
+    dest: /etc/apache2/sites-available/syspass.conf
+    owner: root
+    group: root
+    mode: '0644'
+  tags: vhost
+
+- name: Ativando o Host Virtual Apache
+  shell: a2ensite syspass
+  tags: vhost
+
+- name: Reiniciando o serviço Apache
+  systemd:
+    name: apache2
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+  tags: vhost
