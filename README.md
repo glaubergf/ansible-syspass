@@ -1,10 +1,10 @@
 ---
 Projeto: ansible-syspass
 Descrição: Esse projeto visa instalar e configurar o gerenciador de senha sysPass.
-	Será instalado o Apache, MariaDB e PHP. Assim, proteger o MariaDB e criar o 
-	banco de dados para o sysPass, clonar o projeto sysPass, executar as configurações 
-	e instalar o Composer. Para finalizar, criar a configuração https autoassinado para 
-	o host virtual e ativar o mesmo.
+Será instalado o Apache, MariaDB e PHP. Assim, proteger o MariaDB e criar o 
+banco de dados para o sysPass, clonar o projeto sysPass, executar as configurações 
+e instalar o Composer. Para finalizar, criar a configuração https autoassinado para 
+o host virtual e ativar o mesmo.
 Autor: Glauber GF (mcnd2)
 Data: 2022-11-03
 ---
@@ -86,6 +86,8 @@ Instalando/atualizando requerimentos do 'composer.json'
 ```
 
 Na role **config-host-virtual** será criado (copiado) o arquivo de configuração https autoassinado para o host virtual e ativando o mesmo.
+
+* tasks:
 
 ```
 Criando configuração Host Virtual Apache para o sysPass
