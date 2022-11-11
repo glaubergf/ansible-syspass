@@ -9,9 +9,9 @@ Autor: Glauber GF (mcnd2)
 Data: 2022-11-03
 ---
 
-![Image](https://github.com/glaubergf/ansible-syspass/blob/main/pictures/login_syspass.png)
-
 # Instalar e Configurar o sysPass com Ansible
+
+![Image](https://github.com/glaubergf/ansible-syspass/blob/main/pictures/login_syspass.png)
 
 O [**sysPass**](https://syspass.org/en) é uma poderosa aplicação web que oferece gerenciamento de senhas de forma segura e colaborativa.
 
